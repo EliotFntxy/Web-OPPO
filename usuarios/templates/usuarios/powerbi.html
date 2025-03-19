@@ -1,0 +1,37 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Informe de Power BI</title>
+    <style>
+        /* Asegúrate de que el cuerpo y el HTML ocupen toda la pantalla */
+        html, body {
+            margin: 0;
+            padding: 0;
+            height: 100%;
+        }
+
+        /* Estilo para el iframe */
+        iframe {
+            width: 100%;  /* 100% de ancho */
+            height: 100vh;  /* 100% de altura de la pantalla */
+            border: none;  /* Sin borde */
+        }
+    </style>
+</head>
+<body>
+    <h2>Bienvenido, {{ user.username }}</h2>
+
+    <!-- Insertar el iframe de Power BI con parámetros de URL para ocultar herramientas -->
+<iframe title="DBCCF11" 
+        src="https://app.powerbi.com/view?r=eyJrIjoiZDBjOWUxNzYtNDI5NS00MWVjLThjOWUtMWM3ZmFkNDk4NjkxIiwidCI6ImY5NGJmNGQ5LTgwOTctNDc5NC1hZGY2LWE1NDY2Y2EyODU2MyIsImMiOjR9&navContentPaneEnabled=false&filterPaneEnabled=false&showToolbar=false&embed=true&view=dashboard" 
+        frameborder="0" 
+        allowFullScreen="true">
+</iframe>
+
+    <p><a href="{% url 'logout' %}">Cerrar sesión</a></p>
+</body>
+</html>

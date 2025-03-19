@@ -1,0 +1,6 @@
+<!-- documento_powerbi.html -->
+{% if user.is_authenticated %}
+  <p><a href="{{ powerbi_url }}" target="_blank">Acceder al documento de Power BI</a></p>
+{% else %}
+  <p>Por favor, <a href="{% url 'login' %}">inicia sesión</a> para acceder al documento.</p>
+{% endif %}

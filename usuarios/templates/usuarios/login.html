@@ -1,0 +1,26 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Iniciar Sesión</title>
+    <!-- Aquí se carga el archivo CSS -->
+    <link rel="stylesheet" href="{% static 'css/styles.css' %}">
+</head>
+<body>
+    <div class="login-container">
+        <form method="post">
+            {% csrf_token %}
+            <h2>Iniciar Sesión</h2>
+            <input type="text" name="username" placeholder="Usuario" required>
+            <input type="password" name="password" placeholder="Contraseña" required>
+            <button type="submit">Iniciar Sesión</button>
+            <p class="signup-link">
+                ¿No tienes cuenta? <a href="{% url 'registro' %}">Crear Cuenta</a>
+            </p>
+        </form>
+    </div>
+</body>
+</html>
