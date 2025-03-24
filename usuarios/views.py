@@ -32,5 +32,5 @@ def cerrar_sesion(request):
 
 @login_required
 def powerbi(request):
-    powerbi_url = "https://app.powerbi.com/view?r=XXXXXXXX"
+    powerbi_url = "https://app.powerbi.com/view?r=eyJrIjoiMzc1NDQxYmEtNGYxZC00ZmQ5LTljZTMtZDJmZjQ0ODM0OWM5IiwidCI6ImY5NGJmNGQ5LTgwOTctNDc5NC1hZGY2LWE1NDY2Y2EyODU2MyIsImMiOjR9&pageName=6b65b81d7774e2819615"
     return render(request, 'usuarios/powerbi.html', {'powerbi_url': powerbi_url})
