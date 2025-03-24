@@ -64,7 +64,9 @@ ROOT_URLCONF = 'proyecto_oppo.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [],
+        'DIRS': [
+            BASE_DIR / 'usuarios' / 'templates',  # Agregar la ruta de las plantillas
+        ],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -76,6 +78,7 @@ TEMPLATES = [
         },
     },
 ]
+
 
 WSGI_APPLICATION = 'proyecto_oppo.wsgi.application'
 
@@ -135,10 +138,10 @@ if not DEBUG:
     STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 
 
-
 STATICFILES_DIRS = [
-    BASE_DIR / "static",  # Asegúrate de que tengas una carpeta llamada 'static' en la raíz de tu proyecto
+    BASE_DIR / "static",  # Asegúrate de que la ruta esté bien configurada
 ]
+
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.1/ref/settings/#default-auto-field

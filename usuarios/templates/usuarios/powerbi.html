@@ -7,33 +7,109 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Informe de Power BI</title>
     <style>
-        /* Asegúrate de que el cuerpo y el HTML ocupen toda la pantalla */
+        /* Asegurar que el cuerpo y el HTML ocupen toda la pantalla */
         html, body {
             margin: 0;
             padding: 0;
             height: 100%;
+            background: black; /* Fondo negro */
+            overflow: hidden;
+            font-family: Arial, sans-serif;
+        }
+
+        /* Estilo para el mensaje de bienvenida */
+        #bienvenida-container {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.8); /* Fondo negro semi-transparente */
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-direction: column;
+            color: white;
+            text-align: center;
+        }
+
+        #bienvenida-container h2 {
+            margin-bottom: 20px;
+        }
+
+        #aceptar-btn {
+            background: #28a745; /* Verde */
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            font-size: 1rem;
+            cursor: pointer;
+            border-radius: 5px;
+        }
+
+        #aceptar-btn:hover {
+            background: #218838; /* Verde más oscuro */
+        }
+
+        /* Estilo para el botón de cerrar sesión */
+        #cerrar-sesion {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            background: rgba(255, 255, 255, 0.2);
+            color: white;
+            padding: 10px 20px;
+            border-radius: 5px;
+            text-decoration: none;
+            font-size: 1rem;
+            display: none; /* Se muestra después de aceptar */
+        }
+
+        #cerrar-sesion:hover {
+            background: rgba(255, 255, 255, 0.5);
         }
 
         /* Estilo para el iframe */
+        #iframe-container {
+            display: none; /* Se muestra después de aceptar */
+            width: 100%;
+            height: 100vh;
+        }
+
         iframe {
-            width: 100%;  /* 100% de ancho */
-            height: 100vh;  /* 100% de altura de la pantalla */
-            border: none;  /* Sin borde */
+            width: 100%;
+            height: 100%;
+            border: none;
         }
     </style>
 </head>
 <body>
-    <h2>Bienvenido, {{ user.username }}</h2>
 
-    <!-- Insertar el iframe de Power BI con parámetros de URL para ocultar herramientas -->
+    <!-- Contenedor del mensaje de bienvenida -->
+    <div id="bienvenida-container">
+        <h2>Bienvenido, {{ user.username }}</h2>
+        <button id="aceptar-btn">Aceptar</button>
+    </div>
 
+    <!-- Botón de cerrar sesión -->
+    <a id="cerrar-sesion" href="{% url 'logout' %}">Cerrar sesión</a>
 
-<iframe title="DBCCF11" 
-        src="https://app.powerbi.com/view?r=eyJrIjoiMzc1NDQxYmEtNGYxZC00ZmQ5LTljZTMtZDJmZjQ0ODM0OWM5IiwidCI6ImY5NGJmNGQ5LTgwOTctNDc5NC1hZGY2LWE1NDY2Y2EyODU2MyIsImMiOjR9&pageName=6b65b81d7774e2819615" " 
-        frameborder="0" 
-        allowFullScreen="true">
-</iframe>
+    <!-- Contenedor del iframe (inicialmente oculto) -->
+    <div id="iframe-container">
+        <iframe title="DBCCF11" 
+            src="https://app.powerbi.com/view?r=eyJrIjoiMzc1NDQxYmEtNGYxZC00ZmQ5LTljZTMtZDJmZjQ0ODM0OWM5IiwidCI6ImY5NGJmNGQ5LTgwOTctNDc5NC1hZGY2LWE1NDY2Y2EyODU2MyIsImMiOjR9&pageName=6b65b81d7774e2819615" 
+            frameborder="0" 
+            allowfullscreen="true">
+        </iframe>
+    </div>
 
-    <p><a href="{% url 'logout' %}">Cerrar sesión</a></p>
+    <script>
+        document.getElementById("aceptar-btn").addEventListener("click", function() {
+            document.getElementById("bienvenida-container").style.display = "none"; // Ocultar mensaje
+            document.getElementById("iframe-container").style.display = "block"; // Mostrar iframe
+            document.getElementById("cerrar-sesion").style.display = "block"; // Mostrar botón de cerrar sesión
+        });
+    </script>
+
 </body>
 </html>
