@@ -3,32 +3,117 @@
 <html lang="es">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Informe de Power BI</title>
-    <link rel="stylesheet" href="{% static 'css/styles.css' %}">
     <style>
-        #iframe-container {
-            display: none;
-            width: 100%;
+        html, body {
+            margin: 0;
+            padding: 0;
             height: 100%;
-            position: absolute;
+            background: black;
+            overflow: hidden;
+            font-family: Arial, sans-serif;
+        }
+
+        #bienvenida-container {
+            position: fixed;
             top: 0;
             left: 0;
-            overflow: auto;
-            -webkit-overflow-scrolling: touch;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.9);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-direction: column;
+            color: white;
+            text-align: center;
+            z-index: 1000;
+        }
+
+        #aceptar-btn {
+            background: #00ff00;
+            color: black;
+            border: none;
+            padding: 12px 24px;
+            font-size: 1rem;
+            cursor: pointer;
+            border-radius: 5px;
+            margin-top: 20px;
+            font-weight: bold;
+        }
+
+        #aceptar-btn:hover {
+            background: #00cc00;
+        }
+
+        #aceptar-btn:active {
+            transform: scale(0.95);
+        }
+
+        #cerrar-sesion {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            background: rgba(0, 255, 0, 0.2);
+            color: #00ff00;
+            padding: 8px 15px;
+            border-radius: 5px;
+            text-decoration: none;
+            font-size: 0.9rem;
+            display: none;
+            z-index: 1100;
+            border: 1px solid #00ff00;
+        }
+
+        #cerrar-sesion:hover {
+            background: rgba(0, 255, 0, 0.4);
+        }
+
+        #iframe-container {
+            display: none;
+            position: relative;
+            width: 100%;
+            height: 100vh;
+            overflow: hidden;
         }
 
         iframe {
-            width: 250%; 
-            height: 300%; 
+            width: 100%;
+            height: 100%;
             border: none;
-            min-height: 100vh;
+            position: absolute;
+            top: 0;
+            left: 0;
+        }
+
+        @media screen and (max-width: 1024px) {
+            #iframe-container {
+                transform: scale(1.2);
+                transform-origin: top center;
+                width: 100%;
+                height: 100vh;
+                overflow: hidden;
+            }
         }
 
         @media screen and (max-width: 768px) {
-            iframe {
-                width: 300%; 
-                height: 350%; 
+            #iframe-container {
+                transform: scale(1.5);
+                transform-origin: top center;
+                width: 100%;
+                height: 100vh;
+                overflow: hidden;
+            }
+        }
+
+        @media screen and (max-width: 480px) {
+            #iframe-container {
+                transform: scale(2);
+                transform-origin: top center;
+                width: 100%;
+                height: 100vh;
+                overflow: hidden;
             }
         }
     </style>
@@ -43,7 +128,7 @@
 
     <div id="iframe-container">
         <iframe 
-            src="https://app.powerbi.com/view?r=eyJrIjoiMzc1NDQxYmEtNGYxZC00ZmQ5LTljZTMtZDJmZjQ0ODM0OWM5IiwidCI6ImY5NGJmNGQ5LTgwOTctNDc5NC1hZGY2LWE1NDY2Y2EyODU2MyIsImMiOjR9&pageName=6b65b81d7774e2819615&filterPaneEnabled=true&navContentPaneEnabled=true&toolbarEnabled=true"
+            src="https://app.powerbi.com/view?r=eyJrIjoiMzc1NDQxYmEtNGYxZC00ZmQ5LTljZTMtZDJmZjQ0ODM0OWM5IiwidCI6ImY5NGJmNGQ5LTgwOTctNDc5NC1hZGY2LWE1NDY2Y2EyODU2MyIsImMiOjR9&pageName=6b65b81d7774e2819615&filterPaneEnabled=false&navContentPaneEnabled=true&toolbarEnabled=true"
             allowFullScreen="true">
         </iframe>
     </div>
@@ -54,11 +139,6 @@
             document.getElementById("iframe-container").style.display = "block";
             document.getElementById("cerrar-sesion").style.display = "block";
         });
-
-        // Ajuste para permitir scroll en dispositivos móviles
-        document.addEventListener('touchmove', function(e) {
-            // Permitir scroll normal
-        }, { passive: true });
     </script>
 </body>
 </html>
