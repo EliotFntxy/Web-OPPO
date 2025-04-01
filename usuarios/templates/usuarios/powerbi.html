@@ -1,10 +1,10 @@
 {% load static %}
 <!DOCTYPE html>
-<html lang="es">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Informe de Power BI</title>
+    <title>Power BI Report</title>
     <style>
         html, body {
             margin: 0;
@@ -74,17 +74,66 @@
             display: none;
             position: relative;
             width: 100%;
-            height: 100vh;
+            height: calc(100vh - 40px);
             overflow: hidden;
         }
 
         iframe {
             width: 100%;
-            height: 100%;
+            height: calc(100% + 36px);
             border: none;
             position: absolute;
             top: 0;
             left: 0;
+            margin-bottom: -36px;
+        }
+
+        .footer-cover {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            height: 36px;
+            background-color: black;
+            z-index: 10;
+        }
+
+        /* Estilos para las pestañas de navegación en la parte inferior */
+        #tab-navigation {
+            display: none;
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            height: 40px;
+            background-color: #121212;
+            z-index: 20;
+            overflow-x: auto;
+            white-space: nowrap;
+            border-top: 1px solid #333;
+            text-align: center;
+        }
+
+        .tab {
+            display: inline-block;
+            padding: 10px 20px;
+            background-color: #1e1e1e;
+            color: #00ff00;
+            cursor: pointer;
+            margin-right: 2px;
+            border-bottom-left-radius: 5px;
+            border-bottom-right-radius: 5px;
+            transition: all 0.2s ease;
+        }
+
+        .tab:hover {
+            background-color: #2a2a2a;
+        }
+
+        .tab.active {
+            background-color: #00ff00;
+            color: black;
+            font-weight: bold;
         }
 
         @media screen and (max-width: 1024px) {
@@ -92,7 +141,7 @@
                 transform: scale(1.2);
                 transform-origin: top center;
                 width: 100%;
-                height: 100vh;
+                height: calc(100vh - 40px);
                 overflow: hidden;
             }
         }
@@ -102,8 +151,13 @@
                 transform: scale(1.5);
                 transform-origin: top center;
                 width: 100%;
-                height: 100vh;
+                height: calc(100vh - 40px);
                 overflow: hidden;
+            }
+            
+            .tab {
+                padding: 10px 15px;
+                font-size: 0.9rem;
             }
         }
 
@@ -112,32 +166,93 @@
                 transform: scale(2);
                 transform-origin: top center;
                 width: 100%;
-                height: 100vh;
+                height: calc(100vh - 40px);
                 overflow: hidden;
+            }
+            
+            .tab {
+                padding: 10px 10px;
+                font-size: 0.8rem;
             }
         }
     </style>
 </head>
 <body>
     <div id="bienvenida-container">
-        <h2>Bienvenido, {{ user.username }}</h2>
-        <button id="aceptar-btn">Aceptar</button>
+        <h2>Welcome, {{ user.username }}</h2>
+        <button id="aceptar-btn">Ok</button>
     </div>
 
-    <a id="cerrar-sesion" href="{% url 'logout' %}">Cerrar sesión</a>
-
+    <a id="cerrar-sesion" href="{% url 'logout' %}">Log Out</a>
+    
     <div id="iframe-container">
-        <iframe 
-            src="https://app.powerbi.com/view?r=eyJrIjoiMzc1NDQxYmEtNGYxZC00ZmQ5LTljZTMtZDJmZjQ0ODM0OWM5IiwidCI6ImY5NGJmNGQ5LTgwOTctNDc5NC1hZGY2LWE1NDY2Y2EyODU2MyIsImMiOjR9&pageName=6b65b81d7774e2819615&filterPaneEnabled=false&navContentPaneEnabled=true&toolbarEnabled=true"
+        <iframe id="power-bi-frame"
+            src="https://app.powerbi.com/view?r=eyJrIjoiMzc1NDQxYmEtNGYxZC00ZmQ5LTljZTMtZDJmZjQ0ODM0OWM5IiwidCI6ImY5NGJmNGQ5LTgwOTctNDc5NC1hZGY2LWE1NDY2Y2EyODU2MyIsImMiOjR9&filterPaneEnabled=false&navContentPaneEnabled=false&toolbarEnabled=false"
             allowFullScreen="true">
         </iframe>
+        <div class="footer-cover"></div>
+    </div>
+    
+    <!-- Navegación por pestañas (ahora en la parte inferior) -->
+    <div id="tab-navigation">
+        <!-- Las pestañas se generarán dinámicamente con JavaScript -->
     </div>
 
     <script>
+        // Configuración de las páginas del informe con IDs más precisos
+        const paginasInforme = [
+            { id: "inbound", nombre: "INBOUND", pageUrl: "&pageName=6b65b81d7774e2819615" },
+            { id: "email", nombre: "EMAIL", pageUrl: "&pageName=e7441e42330325edc6d4" },
+            { id: "webchat", nombre: "WEBCHAT", pageUrl: "&pageName=d71ae5874726c3257153" },
+            { id: "whatsapp", nombre: "WHATSAPP", pageUrl: "&pageName=b884b94a4da3cd7ea944" },
+            { id: "overall", nombre: "OVERALL", pageUrl: "&pageName=dd00de5f1d0383833b16" },
+            { id: "tickets", nombre: "TICKETS", pageUrl: "&pageName=e54234edc7054608ad95" }
+        ];
+        
+        // URL base del informe (sin el nombre de la página)
+        const urlBaseInforme = "https://app.powerbi.com/view?r=eyJrIjoiMzc1NDQxYmEtNGYxZC00ZmQ5LTljZTMtZDJmZjQ0ODM0OWM5IiwidCI6ImY5NGJmNGQ5LTgwOTctNDc5NC1hZGY2LWE1NDY2Y2EyODU2MyIsImMiOjR9&filterPaneEnabled=false&navContentPaneEnabled=false&toolbarEnabled=false";
+        
+        // Función para generar las pestañas
+        function generarPestanas() {
+            const navContainer = document.getElementById("tab-navigation");
+            paginasInforme.forEach((pagina, index) => {
+                const tab = document.createElement("div");
+                tab.classList.add("tab");
+                if (index === 0) tab.classList.add("active");
+                tab.textContent = pagina.nombre;
+                tab.setAttribute("data-page", pagina.pageUrl);
+                tab.addEventListener("click", function() {
+                    // Cambia la clase activa
+                    document.querySelectorAll(".tab").forEach(t => t.classList.remove("active"));
+                    this.classList.add("active");
+                    
+                    // Actualiza el iframe con la nueva página
+                    document.getElementById("power-bi-frame").src = urlBaseInforme + this.getAttribute("data-page");
+                });
+                navContainer.appendChild(tab);
+            });
+        }
+        
+        // Función para buscar el ID de la página actual
+        function obtenerIdPaginaActual() {
+            // Esta función se puede usar para debuggear y ver el ID de la página actual
+            try {
+                const iframe = document.getElementById("power-bi-frame");
+                console.log("URL actual del iframe:", iframe.contentWindow.location.href);
+            } catch (e) {
+                console.log("No se pudo acceder a la URL del iframe debido a restricciones de seguridad");
+            }
+        }
+        
+        // Inicializar cuando el usuario acepta
         document.getElementById("aceptar-btn").addEventListener("click", function() {
             document.getElementById("bienvenida-container").style.display = "none";
             document.getElementById("iframe-container").style.display = "block";
+            document.getElementById("tab-navigation").style.display = "block";
             document.getElementById("cerrar-sesion").style.display = "block";
+            
+            // Genera las pestañas
+            generarPestanas();
         });
     </script>
 </body>
